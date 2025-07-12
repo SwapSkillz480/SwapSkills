@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}Search Results{% endblock %}
+{% block content %}
+<h2><i class="bi bi-search"></i> Search Results for "{{ query }}"</h2>
+<form method="get" action="{% url 'search_skills' %}" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="q" class="form-control" placeholder="Search skills..." value="{{ query }}">
+        <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i> Search</button>
+    </div>
+</form>
+{% if query == '' %}
+    <div class="alert alert-warning"><i class="bi bi-exclamation-circle"></i> Please enter a search term.</div>
+{% elif results %}
+    <table class="table table-striped">
+        <thead><tr><th><i class="bi bi-person"></i> User</th><th><i class="bi bi-clock"></i> Availability</th><th></th></tr></thead>
+        <tbody>
+        {% for profile in results %}
+            <tr>
+                <td>{{ profile.user.username }}</td>
+                <td>{{ profile.availability }}</td>
+                <td>
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-purple btn-sm" data-bs-toggle="modal" data-bs-target="#swapModal{{ profile.user.id }}">
+                        <i class="bi bi-arrow-left-right"></i> Request Swap
+                    </button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="swapModal{{ profile.user.id }}" tabindex="-1" aria-labelledby="swapModalLabel{{ profile.user.id }}" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <form method="post" action="{% url 'send_swap_request' profile.user.id %}">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="swapModalLabel{{ profile.user.id }}">Request Skill Swap with {{ profile.user.username }}</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="mb-3">
+                                <label for="skill_requested_{{ profile.user.id }}" class="form-label">Skill you want to learn</label>
+                                <select class="form-select" name="skill_requested_by_sender" id="skill_requested_{{ profile.user.id }}" required>
+                                  {% for skill in profile.skills_offered_list %}
+                                    <option value="{{ skill }}">{{ skill }}</option>
+                                  {% endfor %}
+                                </select>
+                              </div>
+                              <div class="mb-3">
+                                <label for="skill_offered_{{ profile.user.id }}" class="form-label">Skill you will teach in exchange</label>
+                                <select class="form-select" name="skill_offered_by_sender" id="skill_offered_{{ profile.user.id }}" required>
+                                  {% for skill in user_skills_offered_list %}
+                                    <option value="{{ skill }}">{{ skill }}</option>
+                                  {% endfor %}
+                                </select>
+                              </div>
+                            </div>
+                            <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                              <button type="submit" class="btn btn-purple"><i class="bi bi-arrow-left-right"></i> Send Request</button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-info"><i class="bi bi-emoji-frown"></i> No matching profiles found.</div>
+{% endif %}
+<a href="{% url 'dashboard' %}" class="btn btn-link"><i class="bi bi-arrow-left"></i> Back to Dashboard</a>
+{% endblock %}
+{% block extra_css %}
+{{ block.super }}
+<style>
+.btn-purple {
+    background: #a259f7 !important;
+    color: #fff !important;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: background 0.2s, color 0.2s;
+}
+.btn-purple:hover {
+    background: #6a1b9a !important;
+    color: #fff176 !important;
+}
+</style>
+{% endblock %} 

@@ -1,0 +1,10 @@
+Django==4.2.23
+Pillow 
+# For environment variable management (optional, but good practice)
+python-dotenv
+# For testing and coverage (optional, but good for quality)
+pytest
+django-coverage-plugin
+coverage
+# For static file serving in production (optional)
+whitenoise 

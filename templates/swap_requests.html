@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Swap Requests{% endblock %}
+{% block content %}
+<h2 class="text-warning"><i class="bi bi-send"></i> Sent Swap Requests</h2>
+<ul class="list-group mb-4">
+{% for swap in sent %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-person"></i> To: {{ swap.to_user.username }}<br><i class="bi bi-lightbulb"></i> Wants: {{ swap.skill_requested_by_sender }}<br><i class="bi bi-lightbulb-fill"></i> Offers: {{ swap.skill_offered_by_sender }}<br><i class="bi bi-info-circle"></i> Status: {{ swap.status }}</span>
+        <span>
+            <a href="{% url 'request_detail' swap.pk %}" class="btn btn-info btn-sm"><i class="bi bi-info-circle"></i> Details</a>
+            <form method="post" action="{% url 'delete_swap' swap.pk %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i> Delete</button>
+            </form>
+        </span>
+    </li>
+{% empty %}
+    <li class="list-group-item"><i class="bi bi-emoji-frown"></i> No sent requests.</li>
+{% endfor %}
+</ul>
+<h2 class="text-success"><i class="bi bi-inbox"></i> Received Swap Requests</h2>
+<ul class="list-group mb-4">
+{% for swap in received %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span><i class="bi bi-person"></i> From: {{ swap.from_user.username }}<br><i class="bi bi-lightbulb"></i> Wants: {{ swap.skill_requested_by_sender }}<br><i class="bi bi-lightbulb-fill"></i> Offers: {{ swap.skill_offered_by_sender }}<br><i class="bi bi-info-circle"></i> Status: {{ swap.status }}</span>
+        <span>
+            <a href="{% url 'request_detail' swap.pk %}" class="btn btn-info btn-sm"><i class="bi bi-info-circle"></i> Details</a>
+            {% if swap.status == 'Pending' %}
+                <form method="post" action="{% url 'accept_swap' swap.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success btn-sm"><i class="bi bi-check-circle"></i> Accept</button>
+                </form>
+                <form method="post" action="{% url 'reject_swap' swap.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-warning btn-sm"><i class="bi bi-x-circle"></i> Reject</button>
+                </form>
+            {% endif %}
+            <form method="post" action="{% url 'delete_swap' swap.pk %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i> Delete</button>
+            </form>
+        </span>
+    </li>
+{% empty %}
+    <li class="list-group-item"><i class="bi bi-emoji-frown"></i> No received requests.</li>
+{% endfor %}
+</ul>
+<a href="{% url 'dashboard' %}" class="btn btn-link"><i class="bi bi-arrow-left"></i> Back to Dashboard</a>
+{% endblock %} 

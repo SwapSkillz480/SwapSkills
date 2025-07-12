@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Swap Request Detail{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h2><i class="bi bi-info-circle text-info"></i> Swap Request Detail</h2>
+    <div class="card p-4 shadow-sm mb-3">
+      <table class="table table-bordered">
+        <tr><th><i class="bi bi-person"></i> From</th><td>{{ swap.from_user.username }}</td></tr>
+        <tr><th><i class="bi bi-person"></i> To</th><td>{{ swap.to_user.username }}</td></tr>
+        <tr><th><i class="bi bi-lightbulb"></i> Wants</th><td>{{ swap.skill_requested_by_sender }}</td></tr>
+        <tr><th><i class="bi bi-lightbulb-fill"></i> Offers</th><td>{{ swap.skill_offered_by_sender }}</td></tr>
+        <tr><th><i class="bi bi-info-circle"></i> Status</th><td>{{ swap.status }}</td></tr>
+        <tr><th><i class="bi bi-calendar"></i> Created</th><td>{{ swap.created_at }}</td></tr>
+      </table>
+      {% if swap.status == 'Accepted' and not swap.feedback and (user == swap.from_user or user == swap.to_user) %}
+        <a href="{% url 'leave_feedback' swap.pk %}" class="btn btn-primary mb-2"><i class="bi bi-star"></i> Leave Feedback</a>
+      {% endif %}
+      {% if swap.feedback %}
+        <h3><i class="bi bi-star-fill text-warning"></i> Feedback</h3>
+        <ul class="list-group mb-3">
+          <li class="list-group-item"><strong>Rating:</strong> {{ swap.feedback.rating }}</li>
+          <li class="list-group-item"><strong>Comment:</strong> {{ swap.feedback.comment }}</li>
+        </ul>
+      {% endif %}
+      {% if swap.status == 'Pending' and swap.to_user == user %}
+        <form method="post" action="{% url 'accept_swap' swap.pk %}" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-success"><i class="bi bi-check-circle"></i> Accept</button>
+        </form>
+        <form method="post" action="{% url 'reject_swap' swap.pk %}" class="d-inline">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-warning"><i class="bi bi-x-circle"></i> Reject</button>
+        </form>
+      {% endif %}
+      <form method="post" action="{% url 'delete_swap' swap.pk %}" class="d-inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> Delete</button>
+      </form>
+      <a href="{% url 'swap_requests' %}" class="btn btn-link"><i class="bi bi-arrow-left"></i> Back to Requests</a>
+    </div>
+  </div>
+</div>
+{% endblock %} 

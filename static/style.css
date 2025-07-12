@@ -1,0 +1,62 @@
+body {
+    font-family: 'Poppins', 'Montserrat', Arial, sans-serif;
+    background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+    min-height: 100vh;
+}
+
+.navbar {
+    background: linear-gradient(90deg, #6a82fb 60%, #fc5c7d 100%) !important;
+}
+
+.navbar-brand, .navbar-nav .nav-link, .navbar-text {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.btn-primary, .btn-get-started {
+    background: #fff176 !important;
+    color: #6a1b9a !important;
+    border: none;
+    border-radius: 30px;
+    font-weight: bold;
+    transition: background 0.2s, color 0.2s;
+}
+.btn-primary:hover, .btn-get-started:hover {
+    background: #6a1b9a !important;
+    color: #fff176 !important;
+}
+
+.card, .feature-card {
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.table {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+input, select, textarea {
+    border-radius: 10px !important;
+    border: 1.5px solid #6a82fb !important;
+}
+
+footer {
+    color: #fff;
+    background: transparent;
+    font-size: 1rem;
+    margin-top: 2rem;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .hero h1, .display-3 {
+        font-size: 2.2rem !important;
+    }
+    .navbar-brand {
+        font-size: 1.5rem !important;
+    }
+    .feature-card {
+        padding: 1rem !important;
+    }
+} 

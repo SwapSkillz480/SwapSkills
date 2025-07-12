@@ -13,8 +13,10 @@
         <tr><th><i class="bi bi-info-circle"></i> Status</th><td>{{ swap.status }}</td></tr>
         <tr><th><i class="bi bi-calendar"></i> Created</th><td>{{ swap.created_at }}</td></tr>
       </table>
-      {% if swap.status == 'Accepted' and not swap.feedback and (user == swap.from_user or user == swap.to_user) %}
-        <a href="{% url 'leave_feedback' swap.pk %}" class="btn btn-primary mb-2"><i class="bi bi-star"></i> Leave Feedback</a>
+      {% if swap.status == 'Accepted' and not swap.feedback %}
+        {% if user == swap.from_user or user == swap.to_user %}
+          <a href="{% url 'leave_feedback' swap.pk %}" class="btn btn-primary mb-2"><i class="bi bi-star"></i> Leave Feedback</a>
+        {% endif %}
       {% endif %}
       {% if swap.feedback %}
         <h3><i class="bi bi-star-fill text-warning"></i> Feedback</h3>
